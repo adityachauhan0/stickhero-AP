@@ -12,7 +12,7 @@
    <ImageView fitHeight="555.0" fitWidth="1083.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@backgrounds/background.jpg" />
    </ImageView>
-   <Text fontSmoothingType="LCD" layoutX="582.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STICK HERO" wrappingWidth="439.75537109375">
+   <Text fontSmoothingType="LCD" layoutX="581.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STICK HERO" wrappingWidth="439.75537109375">
       <font>
          <Font name="Tahoma Bold" size="66.0" />
       </font>
@@ -21,24 +21,40 @@
    <ImageView fitHeight="228.0" fitWidth="225.0" layoutX="125.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@character/idle.png" />
    </ImageView>
-   <Button contentDisplay="TEXT_ONLY" graphicTextGap="0.0" layoutX="754.0" layoutY="240.0" mnemonicParsing="false" onAction="#switchToScene2" text="Play" textAlignment="CENTER">
-      <font>
-         <Font name="System Bold" size="29.0" />
-      </font>
+   <Button layoutX="737.0" layoutY="459.0" mnemonicParsing="false" onAction="#Exit">
+      <graphic>
+         <ImageView fitHeight="61.0" fitWidth="160.0" onMouseClicked="#Exit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@icons/quit.jpg.png" />
+            </image>
+         </ImageView>
+      </graphic>
    </Button>
-   <Button contentDisplay="TEXT_ONLY" graphicTextGap="0.0" layoutX="754.0" layoutY="452.0" mnemonicParsing="false" onAction="#Exit" prefHeight="69.0" prefWidth="96.0" text="Exit" textAlignment="CENTER">
-      <font>
-         <Font name="System Bold" size="29.0" />
-      </font>
+   <Button layoutX="737.0" layoutY="364.0" mnemonicParsing="false" onAction="#switchToSettings">
+      <graphic>
+         <ImageView fitHeight="69.0" fitWidth="175.0" onMouseClicked="#switchToSettings" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@icons/settings.png" />
+            </image>
+         </ImageView>
+      </graphic>
    </Button>
-   <Button contentDisplay="TEXT_ONLY" graphicTextGap="0.0" layoutX="754.0" layoutY="312.0" mnemonicParsing="false" onAction="#switchToShop" text="Shop" textAlignment="CENTER">
-      <font>
-         <Font name="System Bold" size="29.0" />
-      </font>
+   <Button layoutX="736.0" layoutY="278.0" mnemonicParsing="false" onAction="#switchToShop">
+      <graphic>
+         <ImageView fitHeight="61.0" fitWidth="163.0" onMouseClicked="#switchToShop" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@icons/costume.png" />
+            </image>
+         </ImageView>
+      </graphic>
    </Button>
-   <Button contentDisplay="TEXT_ONLY" graphicTextGap="0.0" layoutX="754.0" layoutY="382.0" mnemonicParsing="false" onAction="#switchToSettings" text="Settings" textAlignment="CENTER">
-      <font>
-         <Font name="System Bold" size="29.0" />
-      </font>
+   <Button layoutX="734.0" layoutY="186.0" mnemonicParsing="false" onAction="#switchToScene2">
+      <graphic>
+         <ImageView fitHeight="69.0" fitWidth="175.0" onMouseClicked="#switchToScene2" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@icons/play%20icon.png" />
+            </image>
+         </ImageView>
+      </graphic>
    </Button>
 </AnchorPane>

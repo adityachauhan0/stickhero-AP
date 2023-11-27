@@ -8,9 +8,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="518.0" prefWidth="1089.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stick.HelloController">
+<AnchorPane focusTraversable="true" onKeyPressed="#handleKeyPress" onKeyReleased="#handleKeyRelease" prefHeight="518.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stick.HelloController">
    <children>
-      <ImageView fitHeight="518.0" fitWidth="1018.0" layoutX="46.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="518.0" fitWidth="1018.0" layoutX="-4.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@backgrounds/background.jpg" />
          </image>
@@ -31,17 +31,24 @@
             <Image url="@character/idle.png" />
          </image>
       </ImageView>
-      <Text fill="WHITE" layoutX="931.0" layoutY="53.0" stroke="BLACK" strokeType="OUTSIDE" text="5943" wrappingWidth="77.4140625">
+      <Text fx:id="cherriesText" fill="WHITE" layoutX="903.0" layoutY="52.0" stroke="BLACK" strokeType="OUTSIDE" text="5943" wrappingWidth="77.4140625">
          <font>
             <Font name="System Bold" size="28.0" />
          </font>
       </Text>
-      <ImageView fitHeight="33.0" fitWidth="55.0" layoutX="881.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="33.0" fitWidth="55.0" layoutX="853.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@icons/cherries.png" />
          </image>
       </ImageView>
-      <Button layoutX="85.0" layoutY="30.0" mnemonicParsing="false" onAction="#switchToHome" text="Back" />
+      <Button layoutX="40.0" layoutY="25.0" mnemonicParsing="false" onAction="#switchToHome">
+         <graphic>
+            <ImageView fitHeight="33.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/return%20icon.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
       <Text fill="WHITE" layoutX="413.0" layoutY="168.0" stroke="BLACK" strokeType="OUTSIDE" text="Highscore:">
          <font>
             <Font name="System Bold Italic" size="24.0" />
@@ -52,5 +59,6 @@
             <Font name="System Bold" size="30.0" />
          </font>
       </Text>
+      <Rectangle fx:id="myRectangle" fill="RED" height="16.0" layoutX="169.0" layoutY="358.0" width="12.0" />
    </children>
 </AnchorPane>

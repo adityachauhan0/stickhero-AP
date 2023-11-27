@@ -9,7 +9,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane prefHeight="520.0" prefWidth="997.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stick.HelloController">
    <children>
       <ImageView fitHeight="519.0" fitWidth="1020.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
@@ -48,10 +47,17 @@
             <Font name="Arial" size="36.0" />
          </font>
       </Button>
-      <Button layoutX="34.0" layoutY="21.0" mnemonicParsing="false" onAction="#switchToHome" text="back">
+      <Button layoutX="34.0" layoutY="21.0" mnemonicParsing="false" onAction="#switchToHome" prefHeight="53.0" prefWidth="42.0">
          <font>
             <Font name="Arial" size="17.0" />
          </font>
+         <graphic>
+            <ImageView fitHeight="51.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/return%20icon.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
    </children>
 </AnchorPane>
