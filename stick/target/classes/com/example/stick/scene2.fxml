@@ -31,7 +31,7 @@
             <Image url="@character/idle.png" />
          </image>
       </ImageView>
-      <Text fx:id="cherriesText" fill="WHITE" layoutX="903.0" layoutY="52.0" stroke="BLACK" strokeType="OUTSIDE" text="5943" wrappingWidth="77.4140625">
+      <Text fx:id="cherriesText" fill="WHITE" layoutX="903.0" layoutY="52.0" stroke="BLACK" strokeType="OUTSIDE" text="0" wrappingWidth="77.4140625">
          <font>
             <Font name="System Bold" size="28.0" />
          </font>
