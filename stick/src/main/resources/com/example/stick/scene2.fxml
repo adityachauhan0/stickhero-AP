@@ -26,12 +26,12 @@
             <Font name="System Bold" size="48.0" />
          </font>
       </Text>
-      <ImageView fitHeight="91.0" fitWidth="99.0" layoutX="105.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="player" fitHeight="91.0" fitWidth="99.0" layoutX="105.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@character/idle.png" />
          </image>
       </ImageView>
-      <Text fx:id="cherriesText" fill="WHITE" layoutX="903.0" layoutY="52.0" stroke="BLACK" strokeType="OUTSIDE" text="5943" wrappingWidth="77.4140625">
+      <Text fx:id="cherriesText" fill="WHITE" layoutX="903.0" layoutY="52.0" stroke="BLACK" strokeType="OUTSIDE" text="0" wrappingWidth="77.4140625">
          <font>
             <Font name="System Bold" size="28.0" />
          </font>
