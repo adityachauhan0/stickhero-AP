@@ -15,13 +15,13 @@
             <Image url="@backgrounds/background.jpg" />
          </image>
       </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="617.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="182.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="396.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="64.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="197.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="394.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="56.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="584.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="250.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="6.0" layoutX="416.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="6.0" layoutX="703.0" layoutY="375.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="6.0" layoutX="416.0" layoutY="371.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="6.0" layoutX="703.0" layoutY="371.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dddddd" height="51.0" layoutX="493.0" layoutY="87.0" opacity="0.58" stroke="BLACK" strokeType="INSIDE" width="66.0" />
-      <Text fill="WHITE" layoutX="512.0" layoutY="130.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" text="0">
+      <Text fx:id="scoretext" fill="WHITE" layoutX="512.0" layoutY="130.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" text="0">
          <font>
             <Font name="System Bold" size="48.0" />
          </font>
