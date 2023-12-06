@@ -1,13 +1,13 @@
 package com.example.stick;
 
-
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,25 +16,27 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.cert.PolicyNode;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
     private Stage stage;
-    @FXML
-    private Text cherriesText;
-    @FXML
-    private Text scoretext;
     private Scene scene;
     private Parent parent;
-    private Rectangle lastCollidedRectangle = null;
+
 
     public void switchToScene2(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("scene2.fxml")));
@@ -42,9 +44,8 @@ public class HelloController implements Initializable {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
-
     }
+
     public void switchToHome(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("home.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -52,6 +53,7 @@ public class HelloController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
     public void switchToSettings(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("settings.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -59,6 +61,7 @@ public class HelloController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
     public void switchToShop(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("shop.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -66,190 +69,245 @@ public class HelloController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
     public void Exit(ActionEvent event) throws IOException {
         Platform.exit();
     }
 
-    @FXML
-    private Rectangle myRectangle;
     private boolean wKeyPressed = false;
-    private double initialX;
-    private double initialY ;
-    private double initialWidth;
-    private double initialHeight;
+    private boolean enlargementInProgress = false;
+    private Timeline stickEnlargeTimeline;
 
     @FXML
-    private void handleKeyPress(KeyEvent event) {
-        initialY = myRectangle.getY();
-        if (event.getCode() == KeyCode.W) {
-            // Set flag to indicate W key is pressed
+    private Line stick;
+
+    @FXML
+    private void keyPressed(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.W && !wKeyPressed) {
             wKeyPressed = true;
-
-            // Increase rectangle size and move it upwards
-            double newHeight = myRectangle.getHeight() + 10.0;
-            myRectangle.setHeight(newHeight);
-
-            double newY = myRectangle.getY() - 10.0;
-            myRectangle.setY(newY);
+            startStickEnlargeAnimation();
         }
     }
+
+    @FXML
+    private void keyReleased(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.W) {
+            wKeyPressed = false;
+            stopStickEnlargeAnimation();
+            if (enlargementInProgress) {
+                rotateStick(); // Call the method to initiate rotation after enlargement
+            }
+            enlargementInProgress = false;
+        }
+    }
+
+    private void startStickEnlargeAnimation() {
+        if (stickEnlargeTimeline == null) {
+            stickEnlargeTimeline = new Timeline(
+                    new KeyFrame(Duration.millis(5), event -> increaseStickLength())
+            );
+            stickEnlargeTimeline.setCycleCount(Animation.INDEFINITE);
+        }
+        enlargementInProgress = true;
+        stickEnlargeTimeline.play();
+    }
+
+    private void stopStickEnlargeAnimation() {
+        if (stickEnlargeTimeline != null) {
+            stickEnlargeTimeline.stop();
+        }
+    }
+
+    private void increaseStickLength() {
+        double incrementValue = 0.5;
+        double maxStickLength = 100000.0; // Set your desired maximum length
+
+        if (stick.getEndY() < maxStickLength) {
+            stick.setEndY(stick.getEndY() - incrementValue);
+        } else {
+            stopStickEnlargeAnimation(); // Stop the animation when the maximum length is reached
+        }
+
+    }
+    @FXML
+    private AnchorPane anchorPane;
+    // Add this method to your controller class
+    // Modify checkCollisionWithRectangles method
+    private Bounds lastStickBounds;
+    private Map<Node, Bounds> lastRectBounds = new HashMap<>();
+
+    @FXML
+    private Text scoretext;
+
+    private boolean checkCollisionWithPlatforms() {
+        // Get the transformed bounds of the player
+        Bounds playerBounds = player.localToScene(player.getBoundsInLocal());
+
+        // Iterate through all children of the AnchorPane
+        for (Node node : anchorPane.getChildren()) {
+            if (node instanceof Rectangle && node.getId() != null && node.getId().startsWith("platform")) {
+                // Get the transformed bounds of the rectangle
+                Bounds rectBounds = node.localToScene(node.getBoundsInLocal());
+
+                // Check if the bottom center of the player is within the bounds of the platform
+                double playerBottomCenterX = playerBounds.getMinX() + playerBounds.getWidth() / 2.0;
+                double playerBottomCenterY = playerBounds.getMaxY();
+
+                if (playerBottomCenterX >= rectBounds.getMinX() && playerBottomCenterX <= rectBounds.getMaxX()
+                        && playerBottomCenterY >= rectBounds.getMinY() && playerBottomCenterY <= rectBounds.getMaxY()) {
+                    // Collision detected
+                    increaseScore();
+                    return true;
+                }
+            }
+        }
+
+        return false; // No collision detected
+    }
+
+    private void increaseScore() {
+        // Assuming scoretext is an instance of Text
+        int currentScore = Integer.parseInt(scoretext.getText());
+        int newScore = currentScore + 1;
+        scoretext.setText(String.valueOf(newScore));
+    }
+
+
+
+
+
+
+
+
+
     @FXML
     private ImageView player;
-    @FXML
-    private void handleKeyRelease(KeyEvent event) {
-        if (event.getCode() == KeyCode.W && wKeyPressed) {
-            // Reset the flag
-            wKeyPressed = false;
 
-            // Rotate the rectangle around its bottom-right point
-            double pivotX = myRectangle.getX() + myRectangle.getWidth();
-            double pivotY = myRectangle.getY() + myRectangle.getHeight();
-            myRectangle.setRotate(myRectangle.getRotate() + 90.0);
+    private void rotateStick() {
+        // Calculate the top point of the stick before rotation
+        double pivotXBeforeRotation = stick.getStartX() + (stick.getEndX() - stick.getStartX()) / 2.0;
+        double pivotYBeforeRotation = stick.getStartY();
 
-            // Swap width and height, and increase length towards the right
-            double newWidth = myRectangle.getHeight(); // swap width and height
-            double newHeight = myRectangle.getWidth() + 10.0; // increase length towards the right
+        // Create a Rotate transformation for smooth rotation
+        Rotate rotate = new Rotate(0, pivotXBeforeRotation, pivotYBeforeRotation);
+        stick.getTransforms().add(rotate);
 
-            // Save initial position and size
-            if (initialX == 0 && initialY == 0) {
-                initialX = myRectangle.getX();
-                initialY = myRectangle.getY();
-                initialWidth = myRectangle.getWidth();
-                initialHeight = myRectangle.getHeight();
+        // Create a Timeline to animate the rotation
+        Timeline rotationTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(rotate.angleProperty(), 0)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(rotate.angleProperty(), 90))
+        );
+
+        // Apply rotation to the top point of the stick
+        Point2D rotatedTopPoint = rotate.transform(pivotXBeforeRotation, pivotYBeforeRotation);
+
+        // Calculate the end point of the stick after rotation
+        double rotatedStickEndX = stick.getEndX();
+        double rotatedStickEndY = stick.getEndY();
+
+        // Calculate the player's final position on the stick (only along the x-axis)
+        double playerFinalX = rotatedStickEndX - player.getBoundsInLocal().getWidth() / 2.0;
+
+        // Create a TranslateTransition for player's smooth translation along the x-axis
+        TranslateTransition translationTransition = new TranslateTransition(Duration.seconds(1), player);
+        translationTransition.setToX(-stick.getEndY());
+
+
+        // Play both animations in sequence
+        SequentialTransition sequentialTransition = new SequentialTransition(rotationTimeline, translationTransition);
+
+        sequentialTransition.setOnFinished(event -> handleTransitionFinished(null));
+
+
+        // Add an event handler to be executed when the transition finishes
+        sequentialTransition.setOnFinished(event -> {
+            // Check for collision with rectangles
+            if (!checkCollisionWithPlatforms()) {
+                // No collision, switch to the home screen
+                try {
+                    System.out.println("No collisions.");
+                    switchToHome(new ActionEvent());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+        });
 
-            // Set the rotated rectangle properties
-            myRectangle.setWidth(newWidth);
-            myRectangle.setHeight(newHeight);
-            myRectangle.setY(pivotY - newWidth);
+        sequentialTransition.play();
+    }
 
-            // Reset rotation to 0 for the next key press
-            myRectangle.setRotate(0.0);
 
-            // Bring the rectangle down by the same amount it was increased
-            myRectangle.setY(myRectangle.getY() - initialY + 19); // Adjust the value accordingly
-            myRectangle.setHeight(10);
+    private void handleTransitionFinished(ActionEvent event) {
+        // Check for collision with rectangles after a delay
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(e -> {
+            // Get the transformed bounds of the stick
+            Bounds stickBounds = stick.localToScene(stick.getBoundsInLocal());
 
-            TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(1), player);
+            // Iterate through all children of the AnchorPane
+            for (Node node : anchorPane.getChildren()) {
+                if (node instanceof Rectangle && node.getId() != null && node.getId().startsWith("platform")) {
+                    // Get the transformed bounds of the rectangle
+                    Bounds rectBounds = node.localToScene(node.getBoundsInLocal());
 
-            // Set the destination X coordinate to be the right side of the myRectangle
-            double destinationX = myRectangle.getX() + myRectangle.getWidth();
-
-            // Set the translation
-            translateTransition.setToX(destinationX);
-
-            // Play the animation
-            translateTransition.play();
-            myRectangle.setX(myRectangle.getX() + myRectangle.getWidth());
-            initialX = myRectangle.getX();
-
-            // Check for intersections with rectangles that don't have an fx:id in the last 10 pixels from the right
-            for (Node node : ((AnchorPane) myRectangle.getParent()).getChildren()) {
-                if (node instanceof Rectangle && ((Rectangle) node).getFill().equals(javafx.scene.paint.Color.valueOf("#2f2f2f"))) {
-                    String fxId = node.getId();
-                    // Check if the shape has already been scored and is an instance of Rectangle
-                    if (intersectsLast10Pixels(node, myRectangle) && !node.equals(player) && (fxId == null || fxId.isEmpty())) {
-                        if (!((Rectangle) node).isDisable()) {
-                            // Increase scoretext by 1
-                            setScoreText(getScoreText() + 1);
-                            // Disable the shape to prevent scoring multiple times
-                            ((Rectangle) node).setDisable(true);
-                        }
-                    }
-                } else if (node instanceof Rectangle && ((Rectangle) node).getFill().equals(javafx.scene.paint.Color.valueOf("#ff1f1f"))) {
-                    String fxId = node.getId();
-                    // Check if the shape has already been scored and is an instance of Rectangle
-                    if (intersectsLast10Pixels(node, myRectangle) && !node.equals(player) && (fxId == null || fxId.isEmpty())) {
-                        if (!((Rectangle) node).isDisable()) {
-                            // Increase cherries count by 1
-                            setCherriesCount(getCherriesCount() + 1);
-                            setScoreText(getScoreText() + 1);
-                            // Disable the shape to prevent scoring multiple times
-                            ((Rectangle) node).setDisable(true);
+                    // Check for collision using transformed bounds
+                    if (stickBounds.intersects(rectBounds)) {
+                        // Check if the end of the stick is touching the platform
+                        double stickEndX = stick.getEndX();
+                        double stickEndY = stick.getEndY();
+                        if (stickEndY >= rectBounds.getMinY() && stickEndY <= rectBounds.getMaxY()) {
+                            // End of the stick is touching the platform, generate a new stick
+                            generateNewStick();
+                            startStickEnlargeAnimation();
+                            return;
                         }
                     }
                 }
             }
-            if (!stickLandedOnPlatform()) {
-                // Stick didn't land on the platform, restart the scene
-                restartScene();
+
+            // No collision or end of the stick not touching the platform, switch to the home screen
+            try {
+                switchToHome(new ActionEvent());
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        }
-        myRectangle.setWidth(10.0);
+        });
+
+        pause.play();
     }
 
-    // Add a method to check for intersection in the last 10 pixels from the right
-    private boolean intersectsLast10Pixels(Node shape, Rectangle myRectangle) {
-        double myRectangleRightX = myRectangle.getBoundsInParent().getMaxX();
-        double shapeLast10PixelsRightX = shape.getBoundsInParent().getMaxX() - 10;
+    private void generateNewStick() {
+        Line newStick = new Line();
+        newStick.setStartX(player.getX() + 10);
+        newStick.setStartY(player.getY());
+        newStick.setEndX(player.getX() + 20); // Assuming the original length of the stick is 10px
+        newStick.setEndY(-25.0); // Set your original endY value
 
-        return myRectangleRightX >= shapeLast10PixelsRightX && myRectangle.getBoundsInParent().intersects(shape.getBoundsInParent());
-    }
+        // Add the new stick to the anchorPane
+        anchorPane.getChildren().add(newStick);
 
-
-    // Add a method to set the scoretext
-    public void setScoreText(int count) {
-        scoretext.setText(Integer.toString(count));
-    }
-
-    public int getScoreText() {
-        return Integer.parseInt(scoretext.getText());
+        // Clear any transformations on the new stick
+        newStick.getTransforms().clear();
     }
 
 
 
 
-    // Add a method to set the cherries count
-    public void setCherriesCount(int count) {
-        cherriesText.setText(Integer.toString(count));
-    }
-
-    public int getCherriesCount() {
-        return Integer.parseInt(cherriesText.getText());
-    }
-    // Add a method to check if the stick landed on the platform
-    private boolean stickLandedOnPlatform() {
-        AnchorPane anchorPane = (AnchorPane) myRectangle.getParent();
-
-        for (Node node : anchorPane.getChildren()) {
-            if (node instanceof Rectangle && ((Rectangle) node).getFill().equals(Color.web("#2f2f2f")) && !node.equals(myRectangle)) {
-                Bounds platformBounds = node.getBoundsInParent();
-                Bounds stickBounds = myRectangle.getBoundsInParent();
-
-                if (stickBounds.intersects(platformBounds)) {
-                    return true; // Stick collided with a platform
-                }
-            }
-        }
-
-        return false; // Stick didn't collide with any platform
-    }
 
 
 
-    // Add a method to restart the scene
-    // Add a method to restart the scene
-    private void restartScene() {
-        try {
-            // Load the FXML file for the current scene
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("home.fxml"));
-            Parent root = loader.load();
 
-            // Set up the stage and scene
-            stage = (Stage) myRectangle.getScene().getWindow();
-            scene = new Scene(root);
 
-            // Set the controller for the FXML file (adjust the controller class accordingly)
-            HelloController controller = loader.getController();
-            controller.initialize(null, null);
 
-            // Set the scene and show the stage
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception according to your needs
-        }
-    }
+
+
+
+
+
+
+
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

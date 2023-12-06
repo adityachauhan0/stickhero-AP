@@ -4,33 +4,35 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane focusTraversable="true" onKeyPressed="#handleKeyPress" onKeyReleased="#handleKeyRelease" prefHeight="518.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stick.HelloController">
+<AnchorPane fx:id="anchorPane" focusTraversable="true" onKeyPressed="#keyPressed" onKeyReleased="#keyReleased" prefHeight="518.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stick.HelloController">
    <children>
-      <ImageView fitHeight="518.0" fitWidth="1018.0" layoutX="-4.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="518.0" fitWidth="1018.0" layoutX="-4.0" onKeyPressed="#keyPressed" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@backgrounds/background.jpg" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="617.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="182.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="396.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
+      <Rectangle fx:id="platform1" arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="617.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="182.0" />
+      <Rectangle fx:id="platform" arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="397.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="49.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f2f2f" height="144.0" layoutX="64.0" layoutY="374.0" stroke="BLACK" strokeType="INSIDE" width="197.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="6.0" layoutX="416.0" layoutY="371.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="6.0" layoutX="703.0" layoutY="371.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
+      <Rectangle fx:id="red" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="6.0" layoutX="416.0" layoutY="371.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
+      <Rectangle fx:id="red1" arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="6.0" layoutX="703.0" layoutY="371.0" stroke="BLACK" strokeType="INSIDE" width="12.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dddddd" height="51.0" layoutX="493.0" layoutY="87.0" opacity="0.58" stroke="BLACK" strokeType="INSIDE" width="66.0" />
       <Text fx:id="scoretext" fill="WHITE" layoutX="512.0" layoutY="130.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="2.0" text="0">
          <font>
             <Font name="System Bold" size="48.0" />
          </font>
       </Text>
-      <ImageView fx:id="player" fitHeight="91.0" fitWidth="99.0" layoutX="105.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="player" fitHeight="91.0" fitWidth="99.0" layoutX="105.0" layoutY="301.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@character/idle.png" />
          </image>
       </ImageView>
+
       <Text fx:id="cherriesText" fill="WHITE" layoutX="903.0" layoutY="52.0" stroke="BLACK" strokeType="OUTSIDE" text="0" wrappingWidth="77.4140625">
          <font>
             <Font name="System Bold" size="28.0" />
@@ -59,6 +61,6 @@
             <Font name="System Bold" size="30.0" />
          </font>
       </Text>
-      <Rectangle fx:id="myRectangle" fill="RED" height="16.0" layoutX="169.0" layoutY="358.0" width="12.0" />
+      <Line fx:id="stick" endX="0.0" endY="-25.0" layoutX="181.0" layoutY="394.0" startX="0.0" startY="-18.0" />
    </children>
 </AnchorPane>
